@@ -6,10 +6,11 @@ Handler middleware(Handler handler) {
     final request = context.request;
 
     // Check if the request is for a static file inside the "uploads" directory
-    if (request.uri.path.startsWith('uploads/')) {
-      final filePath = request.uri.path;
-      final file = File(filePath);
 
+    if (request.uri.path.contains('uploads/')) {
+      final filePath = request.uri.path;
+      final file = File(filePath.replaceAll("/uploads/", "uploads/"));
+      print("DIRE ${filePath}");
       if (await file.exists()) {
         final fileBytes = await file.readAsBytes(); // Read file as bytes
 
