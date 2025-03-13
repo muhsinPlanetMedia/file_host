@@ -8,7 +8,7 @@ Future<Response> onRequest(RequestContext context) async {
   final request = context.request;
 
   if (request.method != HttpMethod.post) {
-    return Response(statusCode: 405, body: 'Method Not Allowed');
+    return Response.json(statusCode: 405, body: 'Method Not Allowed');
   }
 
   final formData = await request.formData();
@@ -17,7 +17,7 @@ Future<Response> onRequest(RequestContext context) async {
   final secretKey = formData.fields['secretKey'];
 
   if (fileData == null || folderName == null || secretKey == null) {
-    return Response(statusCode: 400, body: 'Missing file, folderName, or secretKey');
+    return Response.json(statusCode: 400, body: 'Missing file, folderName, or secretKey');
   }
 
   // Generate a random file name with the correct extension
@@ -32,7 +32,7 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   if (!await checkIsValidSecretKey(folderName, secretKey)) {
-    return Response(statusCode: 400, body: 'Invalid secret key');
+    return Response.json(statusCode: 400, body: 'Invalid secret key');
   }
 
   // Ensure the uploads directory exists
@@ -44,7 +44,7 @@ Future<Response> onRequest(RequestContext context) async {
   await fileStream.addStream(fileData.openRead());
   await fileStream.close();
 
-  return Response(body: 'File uploaded successfully: $randomFileName');
+  return Response.json(body: 'File uploaded successfully: $randomFileName');
 }
 
 Future<File> createSecretKey(String folderName, String secretKey) async {
