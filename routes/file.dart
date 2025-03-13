@@ -165,5 +165,5 @@ String generateRandomFileName(String folderName, String scriptKey, String extens
   final timestamp = DateTime.now().millisecondsSinceEpoch;
   final randomSuffix = base64Url.encode(List<int>.generate(6, (_) => Random().nextInt(256)))
       .replaceAll('=', ''); // Remove padding for a cleaner filename
-  return '${folderName}_$scriptKey$timestamp$randomSuffix.$extension';
+  return '${folderName}_$timestamp$randomSuffix.$extension';
 }
