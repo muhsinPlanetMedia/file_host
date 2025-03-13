@@ -57,6 +57,7 @@ Future<Response> _handleFileUpload(Request request) async {
 }
 
 // Handle GET request to retrieve files
+// Handle GET request to retrieve files
 Future<Response> _handleGetFiles(Request request) async {
   final queryParams = request.uri.queryParameters;
   final folderName = queryParams['folderName'];
@@ -75,14 +76,20 @@ Future<Response> _handleGetFiles(Request request) async {
     return Response.json(statusCode: 404, body: {'error': 'Folder not found'});
   }
 
+  final baseUrl = 'https://file_host-b1c5-vsxzbhz-muhsin-p.globeapp.dev/uploads/$folderName';
+
   final files = directory.listSync()
       .whereType<File>()
       .where((file) => !file.path.endsWith('/secretKey.txt')) // Exclude secret key file
-      .map((file) => file.uri.pathSegments.last)
+      .map((file) => {
+    'fileName': file.uri.pathSegments.last,
+    'url': '$baseUrl/${Uri.encodeComponent(file.uri.pathSegments.last)}'
+  })
       .toList();
 
   return Response.json(body: {'files': files});
 }
+
 
 // Handle DELETE request (delete folder, file, or all folders)
 Future<Response> _handleDelete(Request request) async {
